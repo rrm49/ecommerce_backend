@@ -29,11 +29,15 @@ public class UserController {
         if (existingUser.isPresent()) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .body(Message.getErrorMsg("A user with email " + user.getUserEmailId() + " already exists."));
 
         }
         Users savedUser = userService.saveUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(savedUser);
     }
 
     // Login User

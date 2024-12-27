@@ -1,8 +1,16 @@
 package com.project.ecommerce.service;
 
+import com.project.ecommerce.model.Message;
 import com.project.ecommerce.model.Users;
 import com.project.ecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +22,12 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JWTService jwtService;
+
+    @Autowired
+    private AuthenticationManager authManager;
+
     // Get all users
     public List<Users> getAllUsers() {
         return userRepository.findAll();
@@ -21,7 +35,7 @@ public class UserService {
 
     // Get user by email id (Primary Key)
     public Optional<Users> getUserByEmailId(String emailId) {
-        return userRepository.findById(emailId);
+        return userRepository.findByUserEmailId(emailId);
     }
 
     // Create or Update user
@@ -32,6 +46,33 @@ public class UserService {
     // Delete user
     public void deleteUser(String emailId) {
         userRepository.deleteById(emailId);
+    }
+
+    public ResponseEntity<Object> verify(Users user) {
+        try {
+            Authentication authentication = authManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getUserName(), user.getUserPassword()));
+            if (authentication.isAuthenticated()) {
+                String token = jwtService.generateToken(user.getUserName());
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(Message.getTokenMsg(token));
+            }
+        } catch (BadCredentialsException e) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(Message.getErrorMsg("Wrong username or password"));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Message.getErrorMsg("An error occurred"));
+        }
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Message.getErrorMsg("Wrong username or password"));
     }
 }
 

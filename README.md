@@ -36,9 +36,9 @@ An advanced **Spring Boot** backend application for e-commerce platforms. This p
 ### Prerequisites  
 
 Ensure the following are installed:  
-- **Java** (JDK 17 or higher)  
+- **Java** (JDK 21 or higher)  
 - **Maven**  
-- **Docker Desktop** or another Docker client  
+- **Docker Desktop** or another Docker client  [0ptional]
 
 ### Setup  
 
@@ -47,6 +47,7 @@ Ensure the following are installed:
    git clone https://github.com/your-username/ecommerce-backend.git
    cd ecommerce-backend
    ```
+** Note : Try to use our dev/test db in the .evn-dev
 
    ```bash
    mvn clean install -DskipTests
@@ -56,6 +57,7 @@ Ensure the following are installed:
    ```bash
    mvn spring-boot:run
    ```
+---
 
 ### Docker
 
@@ -66,5 +68,5 @@ Ensure the following are installed:
    docker tag ecommerce-backend <your-registry>/<project-name>:latest
    docker push <your-registry>/<project-name>:latest
    ```
-
+---
 

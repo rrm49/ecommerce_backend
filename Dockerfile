@@ -1,4 +1,4 @@
-FROM openjdk:21-jdk-slim
+FROM azul/zulu-openjdk:21-latest
 ARG JRE_FILE=target/*.jar
-COPY ./target/ecommerce-0.1.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+COPY ./target/ec-run.jar ec-run.jar
+ENTRYPOINT ["java","-jar","/ec-run.jar"]

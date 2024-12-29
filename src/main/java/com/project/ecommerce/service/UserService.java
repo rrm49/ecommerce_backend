@@ -62,6 +62,7 @@ public class UserService {
         } catch (BadCredentialsException e) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .body(Message.getErrorMsg("Wrong username or password"));
         } catch (Exception e) {
             return ResponseEntity

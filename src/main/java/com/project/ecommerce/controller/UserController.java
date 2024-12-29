@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("v1")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -59,7 +59,7 @@ public class UserController {
     }
 
     // Get all users
-    @GetMapping
+    @GetMapping("/users")
     public ResponseEntity<List<Users>> getAllUsers() {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers());
     }

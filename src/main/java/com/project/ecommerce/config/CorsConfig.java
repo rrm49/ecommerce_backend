@@ -15,7 +15,7 @@ public class CorsConfig {
 
         // Allow only specific origins
         config.addAllowedOrigin("http://localhost:5173"); // Add your frontend domain
-        config.addAllowedOrigin("https://your-production-domain.com");
+        config.addAllowedOrigin("https://ecommerce-client-git-main-rajeshs-projects-153896cc.vercel.app");
 
         // Allow specific HTTP methods
         config.addAllowedMethod("GET");

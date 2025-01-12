@@ -1,6 +1,7 @@
 package com.project.ecommerce.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +13,7 @@ import lombok.Setter;
 public class Product {
     @Id
     @Column(name = "product_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int productId;
 
     @ManyToOne
@@ -44,12 +45,19 @@ public class Product {
     @Column(name = "product_img")
     private String productImg;
 
+    @Column(name = "product_medium_img")
+    private String productMediumImg;
+
     @Column(name = "product_thumb_img")
     private String productThumbImg;
 
     @Column(name = "product_rating")
-    private String productRating;
+    private double productRating;
 
     @Column(name = "product_quantity")
     private long productQuantity;
+
+    @OneToOne(mappedBy = "productId", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private Ads ads;
 }

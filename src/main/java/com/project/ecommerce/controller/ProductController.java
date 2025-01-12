@@ -5,7 +5,7 @@ import com.project.ecommerce.model.Message;
 import com.project.ecommerce.model.Product;
 import com.project.ecommerce.model.UserPrincipal;
 import com.project.ecommerce.service.ProductService;
-import io.micrometer.common.util.StringUtils;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@Tag(name = "Product")
 @RequestMapping("v1")
 public class ProductController {
 
@@ -40,11 +41,11 @@ public class ProductController {
             if (user != null && user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_SELLER"))) {
                 productList.addAll(productService.getFilteredProducts(category, subCategory, limit, seller));
             } else {
-                return new ResponseEntity<>(Message.getErrorMsg("sellerParam need login"), HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(Message.getErrorMsg("sellerParam need seller login"), HttpStatus.UNAUTHORIZED);
             }
         }
 
-        productList.addAll(productService.getFilteredProducts(category, subCategory, limit, Optional.empty()));
+        productList.addAll(productService.getFilteredProducts(category, subCategory, limit));
 
         return new ResponseEntity<>(productList, HttpStatus.OK);
     }

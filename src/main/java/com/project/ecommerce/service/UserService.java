@@ -2,6 +2,7 @@ package com.project.ecommerce.service;
 
 import com.project.ecommerce.model.Message;
 import com.project.ecommerce.model.Users;
+import com.project.ecommerce.model.dtos.LoginRequest;
 import com.project.ecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,12 +38,16 @@ public class UserService {
         return userRepository.findByUserEmailId(emailId);
     }
 
-    public Users getUserByUserName(String userName) {
-        return  userRepository.findByUserName(userName);
+    public Optional<Users> getUserByUserName(String userName) {
+        return Optional.ofNullable(userRepository.findByUserName(userName));
     }
 
     // Create or Update user
-    public Users saveUser(Users user) {
+    public Users saveUser(LoginRequest loginRequest) {
+        Users user = new Users();
+        user.setUserName(loginRequest.getUserName());
+        user.setUserEmailId(loginRequest.getUserEmailId());
+        user.setUserPassword(loginRequest.getUserPassword());
         return userRepository.save(user);
     }
 
@@ -51,6 +56,38 @@ public class UserService {
         userRepository.deleteByUserEmailId(emailId);
     }
 
+    public ResponseEntity<Object> verify(LoginRequest loginRequest) {
+        try {
+            Authentication authentication = authManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getUserName(), loginRequest.getUserPassword()
+                    )
+            );
+            if (authentication.isAuthenticated()) {
+                String token = jwtService.generateToken(loginRequest.getUserName());
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(Message.getTokenMsg(token));
+            }
+        } catch (BadCredentialsException e) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Message.getErrorMsg("Wrong username or password"));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Message.getErrorMsg("An error occurred"));
+        }
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Message.getErrorMsg("Wrong username or password"));
+    }
+
+    @Deprecated(since = "1.4", forRemoval = true)
     public ResponseEntity<Object> verify(Users user) {
         try {
             Authentication authentication = authManager.authenticate(

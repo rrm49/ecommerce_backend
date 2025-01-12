@@ -4,7 +4,7 @@
 # ENTRYPOINT ["java","-jar","/ec-run.jar"]
 
 # Use OpenJDK as the base image
-FROM azul/zulu-openjdk:21-latest
+FROM azul/zulu-openjdk-alpine:21-jre-latest
 
 # Set the working directory in the container
 WORKDIR /app

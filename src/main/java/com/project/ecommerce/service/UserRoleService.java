@@ -50,6 +50,7 @@ public class UserRoleService {
             Users existingUser = user.get();
             // Only approve if the request is pending
             if (existingUser.getSellerRequestStatus() == SellerRequestStatus.REQUEST) {
+                existingUser.setUserRole("SELLER");
                 existingUser.setSellerRequestStatus(SellerRequestStatus.APPROVED);
                 userRepository.save(existingUser);
                 return ResponseEntity

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Integer.MAX_VALUE;
+
 @Service
 public class ProductService {
     @Autowired
@@ -25,8 +27,13 @@ public class ProductService {
     @Autowired
     private UserService userService;
 
+    public List<Product> getFilteredProducts(Optional<String> category, Optional<String> subCategory, Optional<Integer> limit) {
+        return this.getFilteredProducts(category, subCategory, limit, Optional.empty());
+    }
+
+
     public List<Product> getFilteredProducts(Optional<String> category, Optional<String> subCategory, Optional<Integer> limit, Optional<String> sellerReq) {
-        int pageSize = 100;
+        int pageSize = MAX_VALUE;
 
         if (limit.isPresent())
             pageSize = limit.get();
@@ -36,13 +43,23 @@ public class ProductService {
         String subCategoryParam = subCategory.orElse("");
 
         if (sellerReq.isPresent()) {
-            Optional<Users> sellerOpt = userService.getUserByEmailId(sellerReq.orElse(""));
+            Optional<Users> sellerOpt;
+            if (sellerReq.get().contains("@")) {
+                sellerOpt = userService.getUserByEmailId(sellerReq.orElse(""));
+                if (!(sellerOpt.isPresent() && sellerReq.get().equals(sellerOpt.get().getUserEmailId())))
+                    throw new RuntimeException("seller miss match");
+            } else {
+                sellerOpt = userService.getUserByUserName(sellerReq.get());
+                if (!(sellerOpt.isPresent() && sellerReq.get().equals(sellerOpt.get().getUserName())))
+                    throw new RuntimeException("seller miss match");
+            }
+
             Users seller = sellerOpt.orElseThrow(() -> new RuntimeException("Seller not found"));// user with seller privileges
 
             return productRepository.findByCategoryAndSubCategoryAndSeller(categoryParam, subCategoryParam, seller, pageable);
         }
 
-        return productRepository.findByCategoryAndSubCategoryAndSeller(categoryParam, subCategoryParam, null, pageable);
+        return productRepository.findByCategoryAndSubCategory(categoryParam, subCategoryParam, pageable);
 
     }
 

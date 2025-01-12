@@ -19,7 +19,7 @@ public class Users {
 
     @Id
     @Column(name = "user_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
     @Column(name = "user_name")
@@ -38,4 +38,13 @@ public class Users {
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
     @JsonBackReference // Break circular reference in Products
     private List<Product> products;
+
+    @Column(name = "user_profile_image_o")
+    private String userProfileImageL;
+
+    @Column(name = "user_profile_image_m")
+    private String userProfileImageM;
+
+    @Column(name = "user_profile_image_t")
+    private String userProfileImageT;
 }

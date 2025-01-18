@@ -42,6 +42,7 @@ public class SecurityConfig {
                                 "/v1/products",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
+                                "/ws/**",
                                 "/"
                         ).permitAll()
                         .requestMatchers("/v1/request/seller/**").hasRole("USER")

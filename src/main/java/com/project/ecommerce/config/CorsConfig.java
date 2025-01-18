@@ -26,6 +26,9 @@ public class CorsConfig {
         config.addAllowedOrigin("https://grumpy-termite-stamphub-31a22ab5.koyeb.app");
         config.addAllowedOrigin("https://forthcoming-brear-ecomorg-0c964907.koyeb.app");
 
+        config.addAllowedMethod("*");
+        config.addAllowedHeader("*");
+
         // Allow specific HTTP methods
         config.addAllowedMethod("GET");
         config.addAllowedMethod("POST");

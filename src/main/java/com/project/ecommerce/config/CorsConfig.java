@@ -1,21 +1,35 @@
 package com.project.ecommerce.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
+import java.util.List;
 
 @Configuration
 public class CorsConfig {
+
+    @Value("${cors.allowedOrigins}")
+    private String allowedOrigins;
+
+    @Bean
+    public RequestContextListener requestContextListener() {
+        return new RequestContextListener();
+    }
 
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
 
         // Allow only specific origins
-        config.addAllowedOrigin("http://localhost:5173"); // Add your frontend domain
-        config.addAllowedOrigin("https://ecommerce-client-git-main-rajeshs-projects-153896cc.vercel.app");
+        List<String> allowedOriginsList = List.of(allowedOrigins.split(","));
+        config.setAllowedOrigins(allowedOriginsList);
+
+        config.addAllowedMethod("*");
+        config.addAllowedHeader("*");
 
         // Allow specific HTTP methods
         config.addAllowedMethod("GET");
@@ -30,8 +44,6 @@ public class CorsConfig {
         // Allow credentials (only if necessary)
         config.setAllowCredentials(true);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
+        return new CorsFilter(request -> config);
     }
 }

@@ -3,7 +3,6 @@ package com.project.ecommerce.controller;
 import com.project.ecommerce.model.Ads;
 import com.project.ecommerce.service.AdsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

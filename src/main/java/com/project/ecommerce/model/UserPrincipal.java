@@ -11,9 +11,9 @@ import java.util.List;
 public class UserPrincipal implements UserDetails {
 
     // UserPrincipal is the current user
-    @Autowired
-    private Users user;
+    private final transient Users user;
 
+    @Autowired
     public UserPrincipal(Users user) {
         this.user = user;
     }

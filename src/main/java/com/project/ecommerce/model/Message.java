@@ -9,11 +9,11 @@ import java.text.MessageFormat;
 @Setter
 public class Message {
 
-    public static String ERROR_MSG = "'{' \"Status\" : \"{0}\",\"Message\" : \"{1}\"'}'";
-    public static String SUCCESS_MSG = "'{' \"Status\" : \"{0}\",\"Message\" : \"{1}\"'}'";
-    public static String TOKEN_MSG = "'{' \"Status\" : \"{0}\",\"Token\" : \"{1}\"'}'";
+    public static final String ERROR_MSG = "'{' \"Status\" : \"{0}\",\"Message\" : \"{1}\"'}'";
+    public static final String SUCCESS_MSG = "'{' \"Status\" : \"{0}\",\"Message\" : \"{1}\"'}'";
+    public static final String TOKEN_MSG = "'{' \"Status\" : \"{0}\",\"Token\" : \"{1}\"'}'";
 
-    public Message() {
+    private Message() { // Ignored
     }
 
     public static String getTokenMsg(String token) {

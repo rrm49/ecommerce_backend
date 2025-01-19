@@ -8,9 +8,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.logging.Logger;
 
 @Component
 public class DataLoader implements CommandLineRunner {
+
+    Logger logger = Logger.getLogger(getClass().getName());
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -24,19 +27,19 @@ public class DataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (loadInitialData) {
-            System.out.println("Sample data insertion Started");
+            logger.info("Sample data insertion Started");
 
             ClassPathResource dataResource = new ClassPathResource("db/data.sql");
             if (dataResource.exists()) {
                 String dataSql = new String(Files.readAllBytes(Paths.get(dataResource.getURI())));
                 jdbcTemplate.execute(dataSql);
-                System.out.println("Data executed from data.sql");
+                logger.info("Data executed from data.sql");
             }
 
-            System.out.println("Sample data insertion Ended");
+            logger.info("Sample data insertion Ended");
 
         } else {
-            System.out.println("Skipping data insertion as the flag is not set.");
+            logger.info("Skipping data insertion as the flag is not set.");
         }
     }
 }

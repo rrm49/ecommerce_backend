@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
-//    @GetMapping("/")
-//    public String redirectToSwagger() {
-//        // Redirect to Swagger UI
-//        return "redirect:/swagger-ui/index.html";
-//    }
+    @GetMapping("/")
+    public String redirectToSwagger() {
+        // Redirect to Swagger UI
+        // return "redirect:/swagger-ui/index.html"
+        return "Welcome";
+    }
 }

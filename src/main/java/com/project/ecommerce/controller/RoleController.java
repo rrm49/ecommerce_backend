@@ -15,8 +15,12 @@ import java.util.List;
 @RequestMapping("v1")
 public class RoleController {
 
+    private final UserRoleService userRoleService;
+
     @Autowired
-    private UserRoleService userRoleService;
+    public RoleController(UserRoleService userRoleService) {
+        this.userRoleService = userRoleService;
+    }
 
     // Request Seller Access
     @PostMapping("/request/seller/{email}")

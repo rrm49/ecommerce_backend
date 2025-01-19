@@ -20,18 +20,25 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private static final String WUOP = "Wrong username or password";
+    private final UserRepository userRepository;
+    private final JWTService jwtService;
+    private final AuthenticationManager authManager;
 
     @Autowired
-    private JWTService jwtService;
-
-    @Autowired
-    private AuthenticationManager authManager;
+    public UserService(UserRepository userRepository, JWTService jwtService, AuthenticationManager authManager) {
+        this.userRepository = userRepository;
+        this.jwtService = jwtService;
+        this.authManager = authManager;
+    }
 
     // Get all users
     public List<Users> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public Optional<Users> getUserById(int userId) {
+        return userRepository.findById(userId);
     }
 
     public Optional<Users> getUserByEmailId(String emailId) {
@@ -74,7 +81,7 @@ public class UserService {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(Message.getErrorMsg("Wrong username or password"));
+                    .body(Message.getErrorMsg(WUOP));
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -84,9 +91,12 @@ public class UserService {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Message.getErrorMsg("Wrong username or password"));
+                .body(Message.getErrorMsg(WUOP));
     }
 
+    /**
+     * @deprecated
+     */
     @Deprecated(since = "1.4", forRemoval = true)
     public ResponseEntity<Object> verify(Users user) {
         try {
@@ -103,7 +113,7 @@ public class UserService {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(Message.getErrorMsg("Wrong username or password"));
+                    .body(Message.getErrorMsg(WUOP));
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -113,11 +123,7 @@ public class UserService {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Message.getErrorMsg("Wrong username or password"));
-    }
-
-    public Users getUserById(int userId) {
-        return null;
+                .body(Message.getErrorMsg(WUOP));
     }
 }
 

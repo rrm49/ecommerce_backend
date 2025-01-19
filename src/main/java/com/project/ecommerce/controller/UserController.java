@@ -27,8 +27,13 @@ import java.util.Optional;
 @Tag(name = "User")
 @RequestMapping("v1")
 public class UserController {
+
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 

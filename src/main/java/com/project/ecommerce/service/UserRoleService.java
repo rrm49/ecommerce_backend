@@ -1,6 +1,5 @@
 package com.project.ecommerce.service;
 
-import com.project.ecommerce.model.Message;
 import com.project.ecommerce.model.Users;
 import com.project.ecommerce.model.enums.SellerRequestStatus;
 import com.project.ecommerce.repository.UserRepository;
@@ -15,8 +14,13 @@ import java.util.Optional;
 @Service
 public class UserRoleService {
 
+    private static final String USER_NOT_FOUND = "User not found.";
+    private final UserRepository userRepository;
+
     @Autowired
-    private UserRepository userRepository;
+    public UserRoleService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     // Request Seller Access
     public ResponseEntity<Object> requestSellerAccess(String email) {
@@ -38,7 +42,7 @@ public class UserRoleService {
         } else {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body("User not found.");
+                    .body(USER_NOT_FOUND);
         }
     }
 
@@ -64,7 +68,7 @@ public class UserRoleService {
         } else {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body("User not found.");
+                    .body(USER_NOT_FOUND);
         }
     }
 
@@ -89,7 +93,7 @@ public class UserRoleService {
         } else {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body("User not found.");
+                    .body(USER_NOT_FOUND);
         }
     }
 

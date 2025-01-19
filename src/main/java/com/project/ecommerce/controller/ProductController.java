@@ -1,6 +1,5 @@
 package com.project.ecommerce.controller;
 
-import ch.qos.logback.core.util.StringUtil;
 import com.project.ecommerce.model.Message;
 import com.project.ecommerce.model.Product;
 import com.project.ecommerce.model.UserPrincipal;
@@ -25,8 +24,12 @@ import java.util.Optional;
 @RequestMapping("v1")
 public class ProductController {
 
+    private final ProductService productService;
+
     @Autowired
-    private ProductService productService;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @GetMapping("/products")
     public ResponseEntity<Object> getProducts(

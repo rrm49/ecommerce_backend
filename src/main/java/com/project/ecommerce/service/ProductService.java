@@ -1,5 +1,6 @@
 package com.project.ecommerce.service;
 
+import com.project.ecommerce.exception.CustomException;
 import com.project.ecommerce.model.Product;
 import com.project.ecommerce.model.Users;
 import com.project.ecommerce.repository.ProductRepository;
@@ -17,15 +18,19 @@ import static java.lang.Integer.MAX_VALUE;
 
 @Service
 public class ProductService {
+
+    private final ProductRepository productRepository;
+    private final UserService userService;
+
     @Autowired
-    ProductRepository productRepository;
+    public ProductService(ProductRepository productRepository, UserService userService) {
+        this.productRepository = productRepository;
+        this.userService = userService;
+    }
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
-
-    @Autowired
-    private UserService userService;
 
     public List<Product> getFilteredProducts(Optional<String> category, Optional<String> subCategory, Optional<Integer> limit) {
         return this.getFilteredProducts(category, subCategory, limit, Optional.empty());
@@ -47,11 +52,11 @@ public class ProductService {
             if (sellerReq.get().contains("@")) {
                 sellerOpt = userService.getUserByEmailId(sellerReq.orElse(""));
                 if (!(sellerOpt.isPresent() && sellerReq.get().equals(sellerOpt.get().getUserEmailId())))
-                    throw new RuntimeException("seller miss match");
+                    throw new CustomException("seller miss match");
             } else {
                 sellerOpt = userService.getUserByUserName(sellerReq.get());
                 if (!(sellerOpt.isPresent() && sellerReq.get().equals(sellerOpt.get().getUserName())))
-                    throw new RuntimeException("seller miss match");
+                    throw new CustomException("seller miss match");
             }
 
             Users seller = sellerOpt.orElseThrow(() -> new RuntimeException("Seller not found"));// user with seller privileges

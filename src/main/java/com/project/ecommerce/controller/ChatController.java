@@ -7,6 +7,8 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
+import java.util.Map;
+
 @Controller
 public class ChatController {
 
@@ -20,7 +22,11 @@ public class ChatController {
     @SendTo("/topic/public")
     public ChatMessage addUser(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
         // Add username in web socket session
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
-        return chatMessage;
+        Map<String, Object> sessionAttribute = headerAccessor.getSessionAttributes();
+        if(sessionAttribute != null ) {
+            sessionAttribute.put("username", chatMessage.getSender());
+            return chatMessage;
+        }
+        return null;
     }
 }

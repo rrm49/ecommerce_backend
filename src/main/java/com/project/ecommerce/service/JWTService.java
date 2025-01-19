@@ -22,15 +22,15 @@ import java.util.function.Function;
 @Service
 public class JWTService {
 
-    private String SECRETE_KEY = "";
+    private  String secreteKey = "";
 
     public JWTService() {
         try {
             KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
             SecretKey sk = keyGen.generateKey();
-            SECRETE_KEY = Base64.getEncoder().encodeToString(sk.getEncoded());
+            secreteKey = Base64.getEncoder().encodeToString(sk.getEncoded());
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new JwtException("JWT algorithm not found");
         }
     }
 
@@ -48,7 +48,7 @@ public class JWTService {
     }
 
     private SecretKey getKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRETE_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(secreteKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

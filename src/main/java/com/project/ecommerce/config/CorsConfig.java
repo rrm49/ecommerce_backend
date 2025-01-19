@@ -1,14 +1,19 @@
 package com.project.ecommerce.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
+import java.util.List;
 
 @Configuration
 public class CorsConfig {
+
+    @Value("${cors.allowedOrigins}")
+    private String allowedOrigins;
 
     @Bean
     public RequestContextListener requestContextListener() {
@@ -20,11 +25,8 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         // Allow only specific origins
-        config.addAllowedOrigin("http://localhost:5173"); // Add your frontend domain
-        config.addAllowedOrigin("https://ecommerce-client-git-main-rajeshs-projects-153896cc.vercel.app");
-        config.addAllowedOrigin("https://bizarre-nelly-project-1241-b12faa1a.koyeb.app");
-        config.addAllowedOrigin("https://grumpy-termite-stamphub-31a22ab5.koyeb.app");
-        config.addAllowedOrigin("https://forthcoming-brear-ecomorg-0c964907.koyeb.app");
+        List<String> allowedOriginsList = List.of(allowedOrigins.split(","));
+        config.setAllowedOrigins(allowedOriginsList);
 
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
@@ -42,8 +44,6 @@ public class CorsConfig {
         // Allow credentials (only if necessary)
         config.setAllowCredentials(true);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
+        return new CorsFilter(request -> config);
     }
 }

@@ -1,5 +1,6 @@
 package com.project.ecommerce.service;
 
+import com.project.ecommerce.exception.CustomException;
 import com.project.ecommerce.model.Order;
 import com.project.ecommerce.model.OrderRequest;
 import com.project.ecommerce.model.Product;
@@ -16,14 +17,16 @@ import java.util.Optional;
 @Service
 public class OrderService {
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
+    private final OrderRepository orderRepository;
+    private final UserService userService;
 
     @Autowired
-    private OrderRepository orderRepository;
-
-    @Autowired
-    private UserService userService;
+    public OrderService(ProductService productService, OrderRepository orderRepository, UserService userService) {
+        this.productService = productService;
+        this.orderRepository = orderRepository;
+        this.userService = userService;
+    }
 
     @Transactional
     public ResponseEntity<Object> placeOrder(OrderRequest orderRequest) {
@@ -43,9 +46,9 @@ public class OrderService {
         productService.updateProductQuantity(orderRequest.getProductId(), -orderRequest.getQuantity());
 
         // Create the order
-        Users user = userService.getUserById(orderRequest.getUserId());
+        Optional<Users> user = userService.getUserById(orderRequest.getUserId());
         Order order = new Order();
-        order.setUser(user);
+        order.setUser(user.orElseThrow(() -> new CustomException("User Not Found")));
         order.setProduct(product);
         order.setQuantity(orderRequest.getQuantity());
 

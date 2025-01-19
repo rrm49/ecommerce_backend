@@ -15,8 +15,8 @@ jobs:
 
     - name: Set Git user name and email
       run: |
-        git config --global user.name "GitHub Actions"
-        git config --global user.email "actions@github.com"
+        git config --global user.name "rrm2"
+        git config --global user.email "ecomrrm@outlook.com"
 
     - name: Add upstream remote
       run: git remote add upstream https://github.com/project-team1241/ecommerce_backend.git

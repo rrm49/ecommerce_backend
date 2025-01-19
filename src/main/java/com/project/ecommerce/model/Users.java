@@ -1,21 +1,25 @@
 package com.project.ecommerce.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.project.ecommerce.model.enums.SellerRequestStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Setter
 @Getter
 @Entity
 @Table(name = "users_table")
 public class Users {
-    // Getters and Setters
+
     @Column(name = "user_email_id")
     private String userEmailId;
 
     @Id
     @Column(name = "user_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
     @Column(name = "user_name")
@@ -23,4 +27,24 @@ public class Users {
 
     @Column(name = "user_password")
     private String userPassword;
+
+    @Column(name = "user_role")
+    private String userRole = "USER";
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "seller_request_status")
+    private SellerRequestStatus sellerRequestStatus;
+
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
+    @JsonBackReference // Break circular reference in Products
+    private List<Product> products;
+
+    @Column(name = "user_profile_image_o")
+    private String userProfileImageL;
+
+    @Column(name = "user_profile_image_m")
+    private String userProfileImageM;
+
+    @Column(name = "user_profile_image_t")
+    private String userProfileImageT;
 }
